@@ -10,15 +10,21 @@
     <div class="container">
         <h1 class="title">Happy Birthday!</h1>
         
-        <div class="envelope" id="envelope">
-            <div class="flap"></div>
-            <div class="letter" id="letter">
-                <p>🎉 Selamat ulang tahun! Semoga hari-harimu selalu penuh kebahagiaan, cinta, dan tawa! 🎂</p>
+        <div class="envelope-wrapper">
+            <div class="envelope" id="envelope">
+                <div class="flap"></div>
+                <div class="letter" id="letter">
+                    <p id="letterText"></p>
+                </div>
             </div>
         </div>
 
         <button id="openBtn">Buka Kotak Surat</button>
     </div>
+
+    <audio id="birthdayMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+
+    <canvas id="fireworksCanvas"></canvas>
 
     <script src="script.js"></script>
 </body>
