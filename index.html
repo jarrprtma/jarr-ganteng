@@ -1,92 +1,25 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maafkan Aku</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-      font-family: "Poppins", sans-serif;
-      overflow: hidden;
-    }
-    .card {
-      background: white;
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      text-align: center;
-      max-width: 400px;
-      animation: fadeIn 1.2s ease-in-out;
-    }
-    .card h1 {
-      color: #e63946;
-      font-size: 2rem;
-      margin-bottom: 10px;
-    }
-    .card p {
-      font-size: 1.1rem;
-      color: #333;
-    }
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #e63946;
-      color: white;
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: 0.3s;
-    }
-    button:hover {
-      background: #d62828;
-      transform: scale(1.05);
-    }
-    @keyframes fadeIn {
-      from {opacity: 0; transform: scale(0.9);}
-      to {opacity: 1; transform: scale(1);}
-    }
-    .heart {
-      position: absolute;
-      color: rgba(255,0,0,0.6);
-      animation: float 5s linear infinite;
-      font-size: 20px;
-    }
-    @keyframes float {
-      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(-800px) rotate(360deg); opacity: 0; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="card">
-    <h1>Maafkan I 💔</h1>
-    <p>Aku benar-benar menyesal atas kesalahanku.  
-    Aku harap kamu bisa memaafkan aku</p>
-    <button onclick="alert('Terima kasih sudah memaafkan I')">Memaafkan?</button>
-  </div>
+    <div class="container">
+        <h1 class="title">Happy Birthday!</h1>
+        
+        <div class="envelope" id="envelope">
+            <div class="flap"></div>
+            <div class="letter" id="letter">
+                <p>🎉 Selamat ulang tahun! Semoga hari-harimu selalu penuh kebahagiaan, cinta, dan tawa! 🎂</p>
+            </div>
+        </div>
 
-  <script>
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.classList.add("heart");
-      heart.innerHTML = "🤭";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.fontSize = Math.random() * 20 + 15 + "px";
-      document.body.appendChild(heart);
+        <button id="openBtn">Buka Kotak Surat</button>
+    </div>
 
-      setTimeout(() => {
-        heart.remove();
-      }, 5000);
-    }
-    setInterval(createHeart, 500);
-  </script>
+    <script src="script.js"></script>
 </body>
 </html>
