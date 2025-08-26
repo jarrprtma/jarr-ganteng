@@ -1,355 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>iseng</title>
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      background: black;
-    }
-    canvas {
-      display: block;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-<canvas id="canvas"></canvas>
+  <!-- Background Stars -->
+  <div class="stars"></div>
 
-<script>
-/*****************************************************
- * SETUP
- *****************************************************/
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-let W = canvas.width;
-let H = canvas.height;
+  <!-- Container utama untuk bunga -->
+  <div class="flower-container">
+    <div class="flower">
+      <div class="stem"></div>
+      <div class="petals">
+        <div class="petal petal1"></div>
+        <div class="petal petal2"></div>
+        <div class="petal petal3"></div>
+        <div class="petal petal4"></div>
+        <div class="petal petal5"></div>
+        <div class="petal petal6"></div>
+      </div>
+      <div class="center"></div>
+      <div class="leaves">
+        <div class="leaf leaf1"></div>
+        <div class="leaf leaf2"></div>
+      </div>
+    </div>
+  </div>
 
-window.addEventListener("resize", () => {
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-});
+  <!-- Kupu-kupu -->
+  <div class="butterflies">
+    <div class="butterfly b1"></div>
+    <div class="butterfly b2"></div>
+    <div class="butterfly b3"></div>
+  </div>
 
-/*****************************************************
- * UTILITY FUNCTIONS
- *****************************************************/
-function rand(min, max) {
-  return Math.random() * (max - min) + min;
-}
-
-function easeInOut(t) {
-  return 0.5 - 0.5 * Math.cos(Math.PI * t);
-}
-
-/*****************************************************
- * GRASS CLASS (Bergoyang)
- *****************************************************/
-class Grass {
-  constructor(x, height, color) {
-    this.x = x;
-    this.height = height;
-    this.color = color;
-    this.angle = Math.random() * Math.PI * 2;
-    this.speed = rand(0.01, 0.02);
-  }
-
-  draw(ctx, time) {
-    ctx.save();
-    ctx.strokeStyle = this.color;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(this.x, H);
-    let sway = Math.sin(this.angle + time * this.speed) * 20;
-    ctx.quadraticCurveTo(this.x + sway, H - this.height / 2, this.x + sway, H - this.height);
-    ctx.stroke();
-    ctx.restore();
-  }
-}
-
-/*****************************************************
- * PARTICLE CLASS (Glow Cahaya)
- *****************************************************/
-class Particle {
-  constructor() {
-    this.reset();
-  }
-
-  reset() {
-    this.x = rand(0, W);
-    this.y = rand(0, H);
-    this.r = rand(1, 3);
-    this.d = rand(0.2, 1);
-    this.alpha = rand(0.5, 1);
-  }
-
-  draw(ctx) {
-    ctx.save();
-    ctx.fillStyle = `rgba(${200},${220},255,${this.alpha})`;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
-    this.y -= this.d;
-    if (this.y < 0) {
-      this.reset();
-      this.y = H;
-    }
-  }
-}
-
-/*****************************************************
- * PETAL CLASS (Untuk bunga & kelopak jatuh)
- *****************************************************/
-class Petal {
-  constructor(x, y, size, angle, color) {
-    this.x = x;
-    this.y = y;
-    this.size = size;
-    this.angle = angle;
-    this.color = color;
-    this.falling = false;
-    this.vy = rand(0.5, 1);
-    this.vx = rand(-0.3, 0.3);
-  }
-
-  draw(ctx) {
-    ctx.save();
-    ctx.translate(this.x, this.y);
-    ctx.rotate(this.angle);
-    let gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.size);
-    gradient.addColorStop(0, this.color);
-    gradient.addColorStop(1, "rgba(255,255,255,0)");
-    ctx.fillStyle = gradient;
-    ctx.beginPath();
-    ctx.ellipse(0, 0, this.size * 1.2, this.size * 0.6, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
-    if (this.falling) {
-      this.x += this.vx;
-      this.y += this.vy;
-      this.angle += 0.01;
-      if (this.y > H) {
-        this.y = H + 100;
-      }
-    }
-  }
-}
-
-/*****************************************************
- * FLOWER CLASS (Mekar & Layu)
- *****************************************************/
-class Flower {
-  constructor(x, baseY, bloomSize) {
-    this.x = x;
-    this.baseY = baseY;
-    this.bloomSize = bloomSize;
-    this.stemHeight = rand(100, 160);
-    this.petals = [];
-    this.progress = 0;
-    this.phase = "growing"; // growing, wilting
-  }
-
-  updatePhase(time) {
-    let cycleTime = 400;
-    let t = (time % cycleTime) / cycleTime;
-    let progress = easeInOut(t);
-
-    // Bolak-balik mekar → layu
-    if (t < 0.5) {
-      this.progress = progress * 2; // 0 → 1
-    } else {
-      this.progress = 2 - progress * 2; // 1 → 0
-    }
-
-    // saat progress turun, kelopak bisa jatuh
-    if (this.progress < 0.3 && Math.random() < 0.005) {
-      let cx = this.x;
-      let cy = this.baseY - this.stemHeight;
-      let p = new Petal(
-        cx,
-        cy,
-        rand(8, 12),
-        rand(0, Math.PI * 2),
-        "rgba(150,200,255,0.8)"
-      );
-      p.falling = true;
-      fallingPetals.push(p);
-    }
-  }
-
-  draw(ctx) {
-    // batang
-    ctx.strokeStyle = "rgba(100,180,255,0.8)";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(this.x, this.baseY);
-    ctx.lineTo(this.x, this.baseY - this.stemHeight);
-    ctx.stroke();
-
-    // daun
-    for (let i = 0; i < 5; i++) {
-      ctx.fillStyle = "rgba(80,150,255,0.4)";
-      ctx.beginPath();
-      ctx.ellipse(
-        this.x - 15 + (i % 2) * 30,
-        this.baseY - 30 - i * 15,
-        15,
-        8,
-        Math.PI / 4,
-        0,
-        Math.PI * 2
-      );
-      ctx.fill();
-    }
-
-    // kelopak
-    let cx = this.x;
-    let cy = this.baseY - this.stemHeight;
-    let petals = 5;
-    for (let i = 0; i < petals; i++) {
-      let angle = (Math.PI * 2 / petals) * i;
-      let petal = new Petal(
-        cx,
-        cy,
-        this.bloomSize * this.progress,
-        angle,
-        "rgba(150,200,255,0.9)"
-      );
-      petal.draw(ctx);
-    }
-
-    // pusat bunga
-    ctx.beginPath();
-    ctx.fillStyle = "rgba(200,230,255,0.9)";
-    ctx.arc(cx, cy, this.bloomSize * 0.4 * this.progress, 0, Math.PI * 2);
-    ctx.fill();
-
-    // glow
-    let g = ctx.createRadialGradient(cx, cy, 5, cx, cy, 80);
-    g.addColorStop(0, "rgba(100,180,255,0.4)");
-    g.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.arc(cx, cy, 80, 0, Math.PI * 2);
-    ctx.fill();
-  }
-}
-
-/*****************************************************
- * BUTTERFLY CLASS
- *****************************************************/
-class Butterfly {
-  constructor() {
-    this.x = rand(0, W);
-    this.y = rand(H/2, H - 100);
-    this.vx = rand(0.5, 1.2);
-    this.vy = rand(-0.5, 0.5);
-    this.size = rand(6, 12);
-    this.angle = 0;
-  }
-
-  draw(ctx) {
-    ctx.save();
-    ctx.translate(this.x, this.y);
-    this.angle += 0.2;
-    let wing = Math.sin(this.angle) * this.size;
-
-    // body
-    ctx.strokeStyle = "rgba(180,200,255,0.9)";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(0, -this.size/2);
-    ctx.lineTo(0, this.size/2);
-    ctx.stroke();
-
-    // wings
-    ctx.fillStyle = "rgba(150,200,255,0.7)";
-    ctx.beginPath();
-    ctx.ellipse(-this.size, 0, this.size, wing, 0, 0, Math.PI*2);
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.ellipse(this.size, 0, this.size, wing, 0, 0, Math.PI*2);
-    ctx.fill();
-
-    ctx.restore();
-
-    // movement
-    this.x += this.vx;
-    this.y += this.vy + Math.sin(this.angle * 0.2) * 0.5;
-
-    if (this.x > W + 50) {
-      this.x = -50;
-      this.y = rand(H/2, H - 100);
-    }
-  }
-}
-
-/*****************************************************
- * OBJECT COLLECTIONS
- *****************************************************/
-let grasses = [];
-for (let i = 0; i < 80; i++) {
-  grasses.push(new Grass(rand(0, W), rand(50, 120), "rgba(80,120,200,0.6)"));
-}
-
-let particles = [];
-for (let i = 0; i < 150; i++) {
-  particles.push(new Particle());
-}
-
-let flowers = [];
-for (let i = 0; i < 7; i++) {
-  flowers.push(new Flower(
-    W/2 - 200 + i*60,
-    H - 50,
-    rand(25, 40)
-  ));
-}
-
-let butterflies = [];
-for (let i = 0; i < 6; i++) {
-  butterflies.push(new Butterfly());
-}
-
-let fallingPetals = [];
-
-/*****************************************************
- * MAIN ANIMATION LOOP
- *****************************************************/
-let time = 0;
-function animate() {
-  ctx.clearRect(0, 0, W, H);
-
-  // particles
-  particles.forEach(p => p.draw(ctx));
-
-  // grass
-  grasses.forEach(g => g.draw(ctx, time));
-
-  // flowers
-  flowers.forEach(f => {
-    f.updatePhase(time);
-    f.draw(ctx);
-  });
-
-  // falling petals
-  fallingPetals.forEach(p => p.draw(ctx));
-  fallingPetals = fallingPetals.filter(p => p.y < H + 50);
-
-  // butterflies
-  butterflies.forEach(b => b.draw(ctx));
-
-  time++;
-  requestAnimationFrame(animate);
-}
-
-animate();
-</script>
+  <script src="script.js"></script>
 </body>
 </html>
