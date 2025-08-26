@@ -1,31 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday!</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Blooming Flowers Animation</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: black;
+      overflow: hidden;
+    }
+    .flower {
+      position: absolute;
+      transform: scale(0);
+      opacity: 0;
+    }
+    .stem {
+      width: 4px;
+      height: 60px;
+      background: green;
+      margin: 0 auto;
+      border-radius: 2px;
+    }
+    .petal {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0.9;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="title">Happy Birthday!</h1>
-        
-        <div class="envelope-wrapper">
-            <div class="envelope" id="envelope">
-                <div class="flap"></div>
-                <div class="letter" id="letter">
-                    <p id="letterText"></p>
-                </div>
-            </div>
-        </div>
 
-        <button id="openBtn">Buka Kotak Surat</button>
-    </div>
+<script>
+  const colors = ["#ff4d6d", "#ff9a8b", "#fcd34d", "#4ade80", "#60a5fa", "#a78bfa", "#f472b6"];
 
-    <audio id="birthdayMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+  function createFlower() {
+    const flower = document.createElement("div");
+    flower.className = "flower";
 
-    <canvas id="fireworksCanvas"></canvas>
+    // batang
+    const stem = document.createElement("div");
+    stem.className = "stem";
+    flower.appendChild(stem);
 
-    <script src="script.js"></script>
+    // jumlah kelopak acak 4–7
+    const petalsCount = Math.floor(Math.random() * 4) + 4;
+    for (let i = 0; i < petalsCount; i++) {
+      const petal = document.createElement("div");
+      petal.className = "petal";
+      petal.style.background = colors[Math.floor(Math.random() * colors.length)];
+      petal.style.transform = `translate(-50%, -50%) rotate(${(360/petalsCount)*i}deg) translate(30px)`;
+      flower.appendChild(petal);
+    }
+
+    // posisi random
+    flower.style.left = Math.random() * window.innerWidth + "px";
+    flower.style.top = Math.random() * window.innerHeight + "px";
+
+    document.body.appendChild(flower);
+
+    // animasi tumbuh
+    anime({
+      targets: flower,
+      scale: [0, 1],
+      opacity: [0, 1],
+      duration: 1500,
+      easing: "easeOutElastic(1, .6)"
+    });
+
+    // hilang setelah beberapa detik
+    setTimeout(() => {
+      anime({
+        targets: flower,
+        opacity: [1, 0],
+        scale: [1, 0],
+        duration: 1000,
+        easing: "easeInBack",
+        complete: () => flower.remove()
+      });
+    }, 4000);
+  }
+
+  // buat bunga baru tiap 800ms
+  setInterval(createFlower, 800);
+</script>
+
 </body>
 </html>
