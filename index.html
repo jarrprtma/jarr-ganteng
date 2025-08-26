@@ -2,94 +2,83 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>iseng</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <title>masih project</title>
   <style>
     body {
-      margin: 0;
-      height: 100vh;
       background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       overflow: hidden;
     }
-    .flower {
-      position: absolute;
-      transform: scale(0);
-      opacity: 0;
+
+    svg {
+      width: 400px;
+      height: 400px;
     }
+
     .stem {
-      width: 4px;
-      height: 60px;
-      background: green;
-      margin: 0 auto;
-      border-radius: 2px;
+      stroke: #ff4fa5;
+      stroke-width: 6;
+      stroke-linecap: round;
+      animation: grow 3s ease forwards;
+      transform-origin: bottom center;
+      transform-box: fill-box;
     }
+
     .petal {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      opacity: 0.9;
+      fill: #ff9edb;
+      opacity: 0;
+      transform: scale(0.2);
+      transform-origin: center;
+      animation: bloom 2s ease forwards;
+      animation-delay: 2.5s;
+    }
+
+    @keyframes grow {
+      from {
+        transform: scaleY(0.1);
+      }
+      to {
+        transform: scaleY(1);
+      }
+    }
+
+    @keyframes bloom {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .glow {
+      fill: pink;
+      opacity: 0.3;
+      filter: blur(12px);
+      animation: pulse 2s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { opacity: 0.2; }
+      to { opacity: 0.6; }
     }
   </style>
 </head>
 <body>
+  <svg viewBox="0 0 200 200">
+    <!-- Stem -->
+    <line class="stem" x1="100" y1="200" x2="100" y2="100" />
 
-<script>
-  const colors = ["#ff4d6d", "#ff9a8b", "#fcd34d", "#4ade80", "#60a5fa", "#a78bfa", "#f472b6"];
+    <!-- Glow -->
+    <circle class="glow" cx="100" cy="80" r="40" />
 
-  function createFlower() {
-    const flower = document.createElement("div");
-    flower.className = "flower";
-
-    // batang
-    const stem = document.createElement("div");
-    stem.className = "stem";
-    flower.appendChild(stem);
-
-    // jumlah kelopak acak 4–7
-    const petalsCount = Math.floor(Math.random() * 4) + 4;
-    for (let i = 0; i < petalsCount; i++) {
-      const petal = document.createElement("div");
-      petal.className = "petal";
-      petal.style.background = colors[Math.floor(Math.random() * colors.length)];
-      petal.style.transform = `translate(-50%, -50%) rotate(${(360/petalsCount)*i}deg) translate(30px)`;
-      flower.appendChild(petal);
-    }
-
-    // posisi random
-    flower.style.left = Math.random() * window.innerWidth + "px";
-    flower.style.top = Math.random() * window.innerHeight + "px";
-
-    document.body.appendChild(flower);
-
-    // animasi tumbuh
-    anime({
-      targets: flower,
-      scale: [0, 1],
-      opacity: [0, 1],
-      duration: 1500,
-      easing: "easeOutElastic(1, .6)"
-    });
-
-    // hilang setelah beberapa detik
-    setTimeout(() => {
-      anime({
-        targets: flower,
-        opacity: [1, 0],
-        scale: [1, 0],
-        duration: 2000,
-        easing: "easeInBack",
-        complete: () => flower.remove()
-      });
-    }, 6000);
-  }
-
-  // buat bunga baru tiap 800ms
-  setInterval(createFlower, 500);
-</script>
-
+    <!-- Petals -->
+    <circle class="petal" cx="100" cy="80" r="20" />
+    <circle class="petal" cx="80" cy="80" r="15" />
+    <circle class="petal" cx="120" cy="80" r="15" />
+    <circle class="petal" cx="100" cy="60" r="15" />
+    <circle class="petal" cx="100" cy="100" r="15" />
+  </svg>
 </body>
 </html>
