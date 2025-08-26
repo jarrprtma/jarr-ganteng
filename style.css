@@ -1,0 +1,271 @@
+/* =========================
+   CSS Bagian 1 - Layout Dasar
+   ========================= */
+
+/* Reset gaya default browser */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Background langit malam */
+body {
+  background: linear-gradient(to top, #00111a, #002233 60%, #001122);
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  font-family: Arial, sans-serif;
+}
+
+/* Stars (nanti akan diisi animasi) */
+.stars {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* Container utama bunga */
+.flower-container {
+  position: relative;
+  bottom: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+/* Bunga */
+.flower {
+  position: relative;
+  width: 200px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  animation: growFlower 4s ease-in-out forwards;
+}
+
+/* Batang */
+.stem {
+  position: absolute;
+  bottom: 0;
+  width: 14px;
+  height: 180px;
+  background: linear-gradient(to top, #0a3d0a, #146d14);
+  border-radius: 10px;
+  z-index: 1;
+}
+
+/* Daun */
+.leaves {
+  position: absolute;
+  bottom: 50px;
+  width: 200px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.leaf {
+  position: absolute;
+  width: 80px;
+  height: 40px;
+  background: linear-gradient(to right, #0c5a0c, #148c14);
+  border-radius: 50%;
+  transform-origin: center;
+}
+
+.leaf1 {
+  left: -60px;
+  transform: rotate(-30deg);
+}
+
+.leaf2 {
+  right: -60px;
+  transform: rotate(30deg);
+}
+
+/* Animasi pertumbuhan bunga */
+@keyframes growFlower {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* =========================
+   CSS Bagian 2 - Kelopak & Pusat Bunga
+   ========================= */
+
+/* Kelopak bunga */
+.petals {
+  position: absolute;
+  bottom: 160px;
+  width: 160px;
+  height: 160px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3;
+}
+
+.petal {
+  position: absolute;
+  width: 90px;
+  height: 120px;
+  background: radial-gradient(circle at 30% 30%, #4db8ff, #0066cc);
+  border-radius: 60% 60% 40% 40%;
+  opacity: 0;
+  transform: scale(0);
+  animation: bloom 2s forwards;
+}
+
+/* Posisi masing-masing kelopak */
+.petal1 { transform: rotate(0deg) translateY(-70px) scale(0); animation-delay: 0.5s; }
+.petal2 { transform: rotate(60deg) translateY(-70px) scale(0); animation-delay: 0.7s; }
+.petal3 { transform: rotate(120deg) translateY(-70px) scale(0); animation-delay: 0.9s; }
+.petal4 { transform: rotate(180deg) translateY(-70px) scale(0); animation-delay: 1.1s; }
+.petal5 { transform: rotate(240deg) translateY(-70px) scale(0); animation-delay: 1.3s; }
+.petal6 { transform: rotate(300deg) translateY(-70px) scale(0); animation-delay: 1.5s; }
+
+/* Bagian tengah bunga */
+.center {
+  position: absolute;
+  bottom: 160px;
+  width: 70px;
+  height: 70px;
+  background: radial-gradient(circle, #ffcc00, #cc9900);
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+  z-index: 5;
+  opacity: 0;
+  transform: scale(0);
+  animation: centerBloom 2s forwards 1.7s;
+}
+
+/* Animasi mekar kelopak */
+@keyframes bloom {
+  0% {
+    opacity: 0;
+    transform: scale(0) translateY(-70px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.1) translateY(-70px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(-70px);
+  }
+}
+
+/* Animasi pusat bunga */
+@keyframes centerBloom {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  80% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* =========================
+   CSS Bagian 3 - Kupu-Kupu & Bintang
+   ========================= */
+
+/* Kupu-kupu */
+.butterflies {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.butterfly {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: radial-gradient(circle at center, #ff66cc, #cc0066);
+  border-radius: 50% 50% 50% 50%;
+  animation: fly 12s linear infinite;
+  opacity: 0.9;
+}
+
+/* Sayap kupu-kupu */
+.butterfly::before,
+.butterfly::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 25px;
+  background: radial-gradient(circle at center, #ff99dd, #cc0066);
+  border-radius: 50%;
+}
+
+.butterfly::before {
+  left: -18px;
+  top: 2px;
+  transform: rotate(-20deg);
+}
+
+.butterfly::after {
+  right: -18px;
+  top: 2px;
+  transform: rotate(20deg);
+}
+
+/* Posisi awal kupu-kupu */
+.b1 { top: 70%; left: 10%; animation-delay: 0s; }
+.b2 { top: 60%; left: 80%; animation-delay: 4s; }
+.b3 { top: 80%; left: 50%; animation-delay: 8s; }
+
+/* Animasi terbang */
+@keyframes fly {
+  0%   { transform: translate(0,0) rotate(0deg); }
+  25%  { transform: translate(100px,-150px) rotate(20deg); }
+  50%  { transform: translate(200px,-50px) rotate(-20deg); }
+  75%  { transform: translate(-100px,-200px) rotate(15deg); }
+  100% { transform: translate(0,0) rotate(0deg); }
+}
+
+/* ---------------------
+   Bintang berpendar
+--------------------- */
+.stars::before,
+.stars::after {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background-image: radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+                    radial-gradient(2px 2px at 150px 80px, #fff, transparent),
+                    radial-gradient(2px 2px at 90px 120px, #fff, transparent),
+                    radial-gradient(2px 2px at 300px 200px, #fff, transparent),
+                    radial-gradient(2px 2px at 400px 50px, #fff, transparent),
+                    radial-gradient(2px 2px at 500px 150px, #fff, transparent);
+  background-size: 600px 600px;
+  animation: twinkle 10s linear infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.3; }
+}
