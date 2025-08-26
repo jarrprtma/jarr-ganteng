@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Blooming Flowers Animation</title>
+  <title>iseng</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
   <style>
     body {
@@ -80,15 +80,15 @@
         targets: flower,
         opacity: [1, 0],
         scale: [1, 0],
-        duration: 1000,
+        duration: 2000,
         easing: "easeInBack",
         complete: () => flower.remove()
       });
-    }, 4000);
+    }, 6000);
   }
 
   // buat bunga baru tiap 800ms
-  setInterval(createFlower, 800);
+  setInterval(createFlower, 500);
 </script>
 
 </body>
